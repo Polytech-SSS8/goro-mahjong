@@ -1,6 +1,6 @@
 package tiles;
 
-public enum TileType{
+public enum TileType implements Comparable<TileType>{
 	// 萬子 (マンズ)
     MAN1(0, "M1", "一"), MAN2(1, "M2", "二"), MAN3(2, "M3", "三"), MAN4(3, "M4", "四"), MAN5(4, "M5", "五"), 
     MAN6(5, "M6", "六"), MAN7(6, "M7", "七"), MAN8(7, "M8", "八"), MAN9(8, "M9", "九"),
@@ -34,7 +34,20 @@ public enum TileType{
         this.name = name;
         this.name2 = name2;
     }
-
+    
+	/*
+	 * なんかコメントアウトしても動く。黙示的にOverrideしてんのかな？
+	 * @Override
+	public int compareTo(TileType other) {
+	    return Integer.compare(this.id, other.id);
+	    // または return this.id - other.id;
+	}*/
+    
+    @Override
+    public String toString() {
+        return this.name2; // 表示したいフィールドを返す
+    }
+    
     /**
      * 牌の一意なIDを取得します。
      * @return 牌のID
