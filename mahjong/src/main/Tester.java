@@ -5,7 +5,7 @@ import java.util.List;
 
 import tiles.TileType;
 
-public class MahjongMain {
+public class Tester {
 
 	public static void main(String[] args) {
 		List<TileType> wall = MarjongTable.createShuffledWall();
@@ -18,9 +18,9 @@ public class MahjongMain {
 		System.out.println();
 
 		List<TileType> agari = new ArrayList<>();
-		agari.add(TileType.MAN7);
 		agari.add(TileType.MAN8);
 		agari.add(TileType.MAN9);
+		agari.add(TileType.PIN1);
 		agari.add(TileType.PIN2);
 		agari.add(TileType.PIN3);
 		agari.add(TileType.PIN4);
@@ -58,10 +58,12 @@ public class MahjongMain {
 			System.out.print(i);
 		}
 		System.out.println();
+		
+		System.out.println(hand);
 
 		//残りの牌で4面子の判定(再起関数)
 		//
 		System.out.println("--↓trueになってたらあがり");
-		System.out.println(MarjongTable.isAgari(agari));
+		System.out.println(JudgmentHand.judgeHand(agari));
 	}
 }
