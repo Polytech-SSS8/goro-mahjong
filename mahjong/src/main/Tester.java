@@ -8,9 +8,9 @@ import tiles.TileType;
 public class Tester {
 
 	public static void main(String[] args) {
-		List<TileType> wall = MarjongTable.createShuffledWall();
-		List<TileType> hand = MarjongTable.dealHand(wall, 13);
-		MarjongTable.sortHand(hand);
+		List<TileType> wall = Table.createShuffledWall();
+		List<TileType> hand = Table.dealHand(wall, 13);
+		Table.sortHand(hand);
 		System.out.println("--↓手牌を配ってソートした結果");
 		for (TileType h : hand) {
 			System.out.print(h.getName2());
@@ -18,21 +18,21 @@ public class Tester {
 		System.out.println();
 
 		List<TileType> agari = new ArrayList<>();
+		agari.add(TileType.MAN2);
+		agari.add(TileType.MAN2);
+		agari.add(TileType.MAN7);
 		agari.add(TileType.MAN8);
 		agari.add(TileType.MAN9);
-		agari.add(TileType.PIN1);
 		agari.add(TileType.PIN2);
-		agari.add(TileType.PIN3);
-		agari.add(TileType.PIN4);
-		agari.add(TileType.PIN3);
-		agari.add(TileType.PIN3);
-		agari.add(TileType.PIN3);
-		agari.add(TileType.SOU2);
-		agari.add(TileType.SOU2);
-		agari.add(TileType.SOU2);
-		agari.add(TileType.HAKU);
-		agari.add(TileType.HAKU);
-		
+		agari.add(TileType.PIN2);
+		agari.add(TileType.PIN2);
+		agari.add(TileType.PIN7);
+		agari.add(TileType.PIN8);
+		agari.add(TileType.SOU6);
+		agari.add(TileType.SOU7);
+		agari.add(TileType.SOU8);
+		agari.add(TileType.PIN9);
+
 		System.out.println("--↓あがり形の例");
 		for (TileType h : agari) {
 			System.out.print(h.getName2());
@@ -44,7 +44,7 @@ public class Tester {
 			counts[i] = 4;
 		}
 
-		//雀頭の固定メソッド
+		// 雀頭の固定メソッド
 		int[] handCounts = new int[34];
 		for (TileType h : agari) {
 			handCounts[h.getId()]++;
@@ -58,12 +58,16 @@ public class Tester {
 			System.out.print(i);
 		}
 		System.out.println();
-		
+
 		System.out.println(hand);
 
-		//残りの牌で4面子の判定(再起関数)
+		// 残りの牌で4面子の判定(再起関数)
 		//
-		System.out.println("--↓trueになってたらあがり");
-		System.out.println(JudgmentHand.judgeHand(agari));
+		Judge j = new Judge();
+		j.judgeHand(agari);
+		System.out.println("--↓あがりになってたらあがり");
+		System.out.println(j);
+		System.out.println("--↓trueになってたらテンパイ");
+		System.out.println(j.isTempai());
 	}
 }
