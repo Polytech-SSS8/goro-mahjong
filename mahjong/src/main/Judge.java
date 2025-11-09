@@ -6,14 +6,14 @@ import java.util.List;
 import tiles.TileType;
 
 /**
- * Judgeインスタンスを定義するクラスです。
+ * 手牌の役を判定するJudgeインスタンスを定義するクラスです。
  * 今のところ手役の判定結果を格納する可変フィールドを持ち、インスタンス化して使います
  * しかし今後はPlayerクラスやTableクラスに情報を持たせたいので、フィールドを定数化してstaticなクラスにします
  */
 public class Judge {
 	private boolean isAgari;
 	private boolean isTempai;
-	private List<String> yaku;
+	private List<Hands> hands;
 	private List<TileType> hand;
 	private int han;
 	private int point;
@@ -45,6 +45,9 @@ public class Judge {
 	 */
 	public void judgeHand(List<TileType> hand) {
 		this.hand = hand;
+		List<Hands> hands = new ArrayList<>();
+		this.hands = hands;
+		tanyao();
 		this.isTempai = judgeTempai(newHandCounts());
 		this.isAgari = judgeAgari(newHandCounts());
 
@@ -206,13 +209,20 @@ public class Judge {
 		return true;
 	}
 
-	public static String Pinfu() {
+	public static String pinfu() {
 
 		return "平和";
 	}
 
-	public static String Tanyao() {
-		return "タンヤオ";
+	public void tanyao() {
+		int[] cnt = newHandCounts();
+		if (cnt[0] == 0 || cnt[8] == 0 || cnt[9] == 0 || cnt[17] == 0 || cnt[18] == 0 ||
+				cnt[26] == 0 || cnt[27] == 0 || cnt[28] == 0 || cnt[29] == 0 || cnt[30] == 0 ||
+				cnt[31] == 0 || cnt[32] == 0 || cnt[33] == 0) {
+			this.hands.add(Hands.TANYAO);
+		} else {
+			// TODO: removeIf()を使ってラムダ式で消す条件とか決めてできるらしーぞ
+		}
 	}
 
 	public static String ipeko() {
@@ -227,8 +237,8 @@ public class Judge {
 		return this.isTempai;
 	}
 
-	public List<String> getYaku() {
-		return this.yaku;
+	public List<Hands> getHands() {
+		return this.hands;
 	}
 
 	public int getHan() {

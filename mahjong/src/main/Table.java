@@ -7,10 +7,16 @@ import java.util.List;
 import tiles.TileType;
 
 public class Table {
-    private int riichiStick;
-    private int Kan;
-    private int Pon;
-    private int chii;
+    private List<TileType> wall; // 牌山
+    private List<TileType> discard; // 打牌
+    private List<TileType> discardTiles; // 捨て牌
+    private TileType dora; // ドラ表示牌
+    private int turn; // 巡目
+    private int honba; // ◯本場
+    private int riichiStick; // リーチ棒の本数
+    private int pon; // ポン。playersTableみたいに各人のテーブルに持たせる？
+    private int chii; // チー。playersTableみたいに各人のテーブルに持たせる？
+    private int kan; // カン。playersTableみたいに各人のテーブルに持たせる？
 
     public static void sortHand(List<TileType> hand) {
         /**
@@ -24,7 +30,7 @@ public class Table {
 
     public static List<TileType> createWall() {
         /**
-         * 136枚の牌を格納した牌山（山牌）リストを生成する
+         * 136枚の牌を格納した牌山リストを生成する
          * 
          * @return シャッフル前の牌山リスト
          */
@@ -40,6 +46,11 @@ public class Table {
         return wall;
     }
 
+    /**
+     * シャッフルされた牌山リストを生成する
+     * 
+     * @return
+     */
     public static List<TileType> createShuffledWall() {
         List<TileType> wall = createWall();
 

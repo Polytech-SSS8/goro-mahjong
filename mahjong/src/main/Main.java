@@ -9,10 +9,10 @@ import tiles.TileType;
 
 public class Main {
 	public static void main(String[] args) {
-		System.out.println("麻雀ver0.1.3だよ");
-		System.out.println("一雀頭四面子を作れたらあがりだよ");
-		System.out.println("例:[一, 一, 九, 九, 九, ①, ②, ③, 1, 2, 3, 白, 白, 白]");
-		System.out.println("テンパイも多分教えてあげられるよ");
+		System.out.println("麻雀ver0.1.4だよ");
+		System.out.println("一雀頭四面子作れたらあがりだよ");
+		System.out.println("例:[二, 二, 八, 八, 八, ②, ③, ④, 2, 3, 4, 5, 5, 5] 役は[タンヤオ]");
+		System.out.println("テンパイとタンヤオがわかるよ");
 		System.out.println("はじめる？");
 		System.out.println("(press y/n)");
 		boolean isOk = false;
@@ -21,7 +21,7 @@ public class Main {
 			String str = scn.nextLine();
 			if (str.equals("y")) {
 				System.out.println("りょうかい！");
-				System.out.println("\n牌は14枚あるよ\n1～14を入力して切りたい牌を指定してね");
+				System.out.println("\n牌は14枚あるよ\n1~14を入力して切りたい牌を指定してね");
 				break;
 			} else if (str.equals("n")) {
 				System.out.println("ほげほげ");
@@ -46,11 +46,15 @@ public class Main {
 		while (!j.isAgari()) {
 			tumogiri(hand, wall);
 			j.judgeHand(hand);
+			if (j.isAgari()) {
+				break;
+			}
 			if (j.isTempai()) {
 				System.out.println("テンパイ！");
 			}
 		}
 		System.out.println("あがり！");
+		System.out.println("役は" + j.getHands());
 
 		scn.close();
 	}

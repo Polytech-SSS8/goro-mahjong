@@ -21,17 +21,17 @@ public class Tester {
 		agari.add(TileType.MAN2);
 		agari.add(TileType.MAN2);
 		agari.add(TileType.MAN7);
+		agari.add(TileType.MAN6);
 		agari.add(TileType.MAN8);
-		agari.add(TileType.MAN9);
 		agari.add(TileType.PIN2);
 		agari.add(TileType.PIN2);
 		agari.add(TileType.PIN2);
 		agari.add(TileType.PIN7);
 		agari.add(TileType.PIN8);
-		agari.add(TileType.SOU6);
+		agari.add(TileType.SOU9);
 		agari.add(TileType.SOU7);
 		agari.add(TileType.SOU8);
-		agari.add(TileType.PIN9);
+		agari.add(TileType.PIN6);
 
 		System.out.println("--↓あがり形の例");
 		for (TileType h : agari) {
@@ -69,5 +69,8 @@ public class Tester {
 		System.out.println(j);
 		System.out.println("--↓trueになってたらテンパイ");
 		System.out.println(j.isTempai());
+
+		System.out.println("--↓断么九って書いてたらOK");
+		System.out.println(j.getHands());
 	}
 }
