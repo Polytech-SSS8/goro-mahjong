@@ -7,6 +7,10 @@ import java.util.Scanner;
 
 import tiles.TileType;
 
+/**
+ * メインメソッドを持つクラスです。
+ * 
+ */
 public class Main {
 	public static void main(String[] args) {
 		System.out.println("麻雀ver0.1.4だよ");
@@ -36,10 +40,10 @@ public class Main {
 		System.out.println("あなたの手牌はこれ");
 		List<TileType> wall = new ArrayList<>();
 		List<TileType> hand = new ArrayList<>();
-		wall = Table.createShuffledWall();
-		hand = Table.dealHand(wall, 14);
+		//wall = Table.createShuffledWall();
+		//hand = Table.dealHand(wall, 14);
 
-		Judge j = new Judge();
+		JudgeIns j = new JudgeIns();
 		j.judgeHand(hand);
 		System.out.println(hand);
 
@@ -82,8 +86,8 @@ public class Main {
 		System.out.println(hand.get(nanikiru) + "を切るよ");
 		hand.remove(nanikiru);
 
-		Table.sortHand(hand);
-		hand.addAll(Table.dealHand(wall, 1));
+		//Table.sortHand(hand);
+		//hand.addAll(Table.dealHand(wall, 1));
 		System.out.println(hand.getLast() + "をツモってきたよ");
 		System.out.println(hand);
 

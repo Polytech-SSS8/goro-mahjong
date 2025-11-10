@@ -5,7 +5,7 @@ package main;
  * 役のid、名前、翻数を格納します。
  */
 public enum Hands {
-    TANYAO(0, "タンヤオ", 1, 1);
+    TANYAO(0, "タンヤオ", 1, 1), PINFU(1, "ピンフ", 1, 0);
 
     private final int id; // 手役id
     private final String name; // 手役の名前

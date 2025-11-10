@@ -14,11 +14,21 @@ public class Table {
     private int turn; // 巡目
     private int honba; // ◯本場
     private int riichiStick; // リーチ棒の本数
-    private int pon; // ポン。playersTableみたいに各人のテーブルに持たせる？
-    private int chii; // チー。playersTableみたいに各人のテーブルに持たせる？
-    private int kan; // カン。playersTableみたいに各人のテーブルに持たせる？
-
-    public static void sortHand(List<TileType> hand) {
+    private List<TileType> pon; // ポン。playersTableみたいに各人のテーブルに持たせる？
+    private List<TileType> chii; // チー。playersTableみたいに各人のテーブルに持たせる？
+    private List<TileType> kan; // カン。playersTableみたいに各人のテーブルに持たせる？
+    
+    //コンストラクタ
+    public Table() {
+    	super();
+    	this.discard = new ArrayList<TileType>();
+    	this.discardTiles = new ArrayList<TileType>();
+    	
+    }
+    
+    
+    
+    public void sortHand(List<TileType> hand) {
         /**
          * 手牌を萬子、筒子、索子、風牌、三元牌の順でソートする
          * 
@@ -27,8 +37,9 @@ public class Table {
          */
         Collections.sort(hand);
     }
+    
 
-    public static List<TileType> createWall() {
+    public List<TileType> createWall() {
         /**
          * 136枚の牌を格納した牌山リストを生成する
          * 
@@ -51,7 +62,7 @@ public class Table {
      * 
      * @return
      */
-    public static List<TileType> createShuffledWall() {
+    public List<TileType> createShuffledWall() {
         List<TileType> wall = createWall();
 
         // 牌山をシャッフル
@@ -67,7 +78,7 @@ public class Table {
      * @param count 取り出す牌の枚数
      * @return 取り出した手牌リスト
      */
-    public static List<TileType> dealHand(List<TileType> wall, int count) {
+    public List<TileType> dealHand(List<TileType> wall, int count) {
         if (wall.size() < count) {
             throw new IllegalArgumentException("牌山に残っている牌が不足しています。");
         }
@@ -82,5 +93,87 @@ public class Table {
 
         return hand;
     }
+
+	public List<TileType> getWall() {
+		return wall;
+	}
+
+	public void setWall(List<TileType> wall) {
+		this.wall = wall;
+	}
+
+	public List<TileType> getDiscard() {
+		return discard;
+	}
+
+	public void setDiscard(List<TileType> discard) {
+		this.discard = discard;
+	}
+
+	public List<TileType> getDiscardTiles() {
+		return discardTiles;
+	}
+
+	public void setDiscardTiles(List<TileType> discardTiles) {
+		this.discardTiles = discardTiles;
+	}
+
+	public TileType getDora() {
+		return dora;
+	}
+
+	public void setDora(TileType dora) {
+		this.dora = dora;
+	}
+
+	public int getTurn() {
+		return turn;
+	}
+
+	public void setTurn(int turn) {
+		this.turn = turn;
+	}
+
+	public int getHonba() {
+		return honba;
+	}
+
+	public void setHonba(int honba) {
+		this.honba = honba;
+	}
+
+	public int getRiichiStick() {
+		return riichiStick;
+	}
+
+	public void setRiichiStick(int riichiStick) {
+		this.riichiStick = riichiStick;
+	}
+
+	public List<TileType> getPon() {
+		return pon;
+	}
+
+	public void setPon(List<TileType> pon) {
+		this.pon = pon;
+	}
+
+	public List<TileType> getChii() {
+		return chii;
+	}
+
+	public void setChii(List<TileType> chii) {
+		this.chii = chii;
+	}
+
+	public List<TileType> getKan() {
+		return kan;
+	}
+
+	public void setKan(List<TileType> kan) {
+		this.kan = kan;
+	}
+    
+    
 
 }

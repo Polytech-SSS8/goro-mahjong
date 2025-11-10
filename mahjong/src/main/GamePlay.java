@@ -5,5 +5,9 @@ package main;
  * まだとても曖昧です。
  */
 public class GamePlay {
+	public boolean canPon;
+	public boolean canChii;
+	public boolean canKan;
+	
 
 }

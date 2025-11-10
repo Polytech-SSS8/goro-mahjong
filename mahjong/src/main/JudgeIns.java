@@ -6,11 +6,12 @@ import java.util.List;
 import tiles.TileType;
 
 /**
- * 手牌の役を判定するJudgeクラスです。
- * 判定情報を格納したArrayListを返すstaticなメソッドを持ちます。
+ * 手牌の役を判定するJudgeインスタンスを定義するクラスです。
+ * 今のところ手役の判定結果を格納する可変フィールドを持ち、インスタンス化して使います
+ * しかし今後はPlayerクラスやTableクラスに情報を持たせたいので、フィールドを定数化してstaticなクラスにします
  */
 //TODO 判定情報を格納したarraylistを返すstaticクラスにする
-public class Judge {
+public class JudgeIns {
 	private boolean isAgari;
 	private boolean isTempai;
 	private List<Hands> hands;
@@ -20,7 +21,7 @@ public class Judge {
 	// private int[] handCounts;
 
 	// コンストラクタ
-	public Judge() {
+	public JudgeIns() {
 		super();
 		this.isAgari = false;
 		this.isTempai = false;
@@ -29,7 +30,7 @@ public class Judge {
 		this.point = 0;
 	}
 
-	private Judge(boolean isAgari, List<String> hands, List<TileType> hand, int han, int point) {
+	private JudgeIns(boolean isAgari, List<String> hands, List<TileType> hand, int han, int point) {
 		super();
 		this.isAgari = isAgari;
 		this.hand = hand;
@@ -37,23 +38,20 @@ public class Judge {
 		this.point = point;
 	}
 
-	//メソッド
 	/**
-	 * 判定結果の全情報を格納したListを返す静的メソッドです。
+	 * Judgeインスタンスに手牌の上がり判定結果を備えさせるメソッドです
 	 * 
 	 * @param 手牌のList
-	 * @return 判定結果List
 	 * 
 	 */
-	public static List<Integer> judgeHand(List<TileType> hand) {
-		int[] cnt = newHandCounts(hand);
-		List<Integer> judge = new ArrayList<Integer>();
-		judge.add(judgeAgari(cnt));
-		judge.add(judgeTempai(cnt));
-		judge.add(tanyao(cnt));
-		
-		
-		return judge;
+	public void judgeHand(List<TileType> hand) {
+		this.hand = hand;
+		List<Hands> hands = new ArrayList<>();
+		this.hands = hands;
+		tanyao();
+		this.isTempai = judgeTempai(newHandCounts());
+		this.isAgari = judgeAgari(newHandCounts());
+
 	}
 
 	@Override
@@ -67,7 +65,7 @@ public class Judge {
 	/**
 	 * handCount配列の中で、1以上の値を持つ最初のインデックス（牌）を見つけます
 	 */
-	private static int findFirstTile(int[] handCount) {
+	private int findFirstTile(int[] handCount) {
 		for (int i = 0; i < handCount.length; i++) {
 			if (handCount[i] > 0) {
 				return i;
@@ -80,14 +78,14 @@ public class Judge {
 	 * このインスタンスのhandフィールドから上がり判定に必要なint型handCounts配列を作成するメソッドです
 	 * 
 	 * @return int型handCounts配列(要素数34)
-	 *//*
-		public static int[] newHandCounts(List<TileType> hand) {
+	 */
+	public int[] newHandCounts() {
 		int[] handCounts = new int[34];
-		for (TileType h : hand) {
+		for (TileType h : this.hand) {
 			handCounts[h.getId()]++;
 		}
 		return handCounts;
-		}*/
+	}
 
 	/**
 	 * 引数の手牌Listから上がり判定に必要なint型handCounts配列を作成するメソッドです
@@ -95,7 +93,7 @@ public class Judge {
 	 * @param hand
 	 * @return int型handCounts配列(要素数34)
 	 */
-	public static int[] newHandCounts(List<TileType> hand) {
+	public int[] newHandCounts(List<TileType> hand) {
 		int[] handCounts = new int[34];
 		for (TileType h : hand) {
 			handCounts[h.getId()]++;
@@ -110,13 +108,13 @@ public class Judge {
 	 * @param ツモ前手牌のint型配列(34)
 	 * @return テンパイならtrue
 	 */
-	public static boolean judgeTempai13(int[] handCount13) {
+	public boolean judgeTempai13(int[] handCount13) {
 		for (int i = 0; i < 34; i++) {
 			if (handCount13[i] < 4) {
 				int[] handCount14 = handCount13.clone();
 				handCount14[i]++;
 
-				if (judgeAgari(handCount14) == 1) {
+				if (judgeAgari(handCount14)) {
 					return true;
 				}
 			}
@@ -131,7 +129,8 @@ public class Judge {
 	 * @return テンパイならtrue
 	 * 
 	 */
-	public static int judgeTempai(int[] handCount) {
+	public boolean judgeTempai(int[] handCount) {
+		this.isTempai = false;
 		int[] cnt = new int[34];
 		for (int i = 0; i < cnt.length; i++) {
 			cnt = handCount;
@@ -139,11 +138,11 @@ public class Judge {
 				int[] handCount13 = handCount.clone();
 				handCount13[i]--;
 				if (judgeTempai13(handCount13)) {
-					return 1;
+					return true;
 				}
 			}
 		}
-		return 0;
+		return false;
 	}
 
 	/**
@@ -152,77 +151,19 @@ public class Judge {
 	 * @param 手牌IDのint型配列
 	 * @return 上がり形が成立していればtrue
 	 */
-	public static int judgeAgari(int[] handCount) {
-		for (int i = 0; i < handCount.length; i++) {
-			if (handCount[i] >= 2) {
-				int[] cnt = handCount.clone();
+	public boolean judgeAgari(int[] handCount) {
+		int[] cnt = new int[34];
+		// cnt = handCount;
+		this.isAgari = false;
+		for (int i = 0; i < cnt.length; i++) {
+			cnt = handCount;
+			if (cnt[i] >= 2) {
 				cnt[i] -= 2;
-				if (is4MentsuRecursive(cnt, 4)) {
-					return 1;
+				if (is4Mentsu(cnt)) {
+					return true;
 				}
 			}
 		}
-		return 0;
-	}
-	
-	/**
-	 * 【再帰メソッド】残りの手牌で指定された数の面子を作れるかを判定します。
-	 * * @param handCount 雀頭や面子を抜いた後の手牌カウント配列 (コピーを渡すこと推奨)
-	 * @param requiredMenzen 残り必要な面子の数
-	 * @return 成立していれば true
-	 */
-	public static boolean is4MentsuRecursive(int[] handCount, int requiredMenzen) {
-		// 1. ベースケース: 必要な面子が0になったら成功
-		if (requiredMenzen == 0) {
-			return true;
-		}
-
-		// 2. 処理開始位置の決定 (残っている最初の牌)
-		int startTileId = findFirstTile(handCount);
-
-		// 牌が残っていないのに必要な面子がある場合は失敗
-		if (startTileId == -1) {
-			return false;
-		}
-
-		// **********************************************
-		// 3. 刻子 (コーツ) 抜き出しを試行
-		// **********************************************
-		if (handCount[startTileId] >= 3) {
-			// コピーを作成し、刻子を抜き出す
-			int[] cntForKotsu = handCount.clone();
-			cntForKotsu[startTileId] -= 3;
-			
-			// 残りの面子 requiredMenzen-1 が作れるか再帰的にチェック
-			if (is4MentsuRecursive(cntForKotsu, requiredMenzen - 1)) {
-				return true; // 成功
-			}
-		}
-
-		// **********************************************
-		// 4. 順子 (シュンツ) 抜き出しを試行
-		// **********************************************
-		// 数牌かつ 9牌ではない (IDが7, 8, 16, 17, 25, 26ではない) ことをチェック
-		if (startTileId < 27 && (startTileId % 9) < 7) { 
-			int nextTile1 = startTileId + 1;
-			int nextTile2 = startTileId + 2;
-
-			if (handCount[nextTile1] >= 1 && handCount[nextTile2] >= 1) {
-				// 順子を抜き出すための新しいコピー
-				int[] cntForShuntsu = handCount.clone();
-				
-				cntForShuntsu[startTileId] -= 1;
-				cntForShuntsu[nextTile1] -= 1;
-				cntForShuntsu[nextTile2] -= 1;
-				
-				// 残りの面子 requiredMenzen-1 が作れるか再帰的にチェック
-				if (is4MentsuRecursive(cntForShuntsu, requiredMenzen - 1)) {
-					return true; // 成功
-				}
-			}
-		}
-
-		// 5. 刻子も順子も抜き出せなかった場合は失敗
 		return false;
 	}
 
@@ -234,8 +175,7 @@ public class Judge {
 	 * @param 雀頭を抜いた手牌IDのint型配列
 	 * @return 4面子があればtrue
 	 */
-	public static boolean is4Mentsu(int[] /*cnt*/ outJantouCnt) {
-		int[] cnt = outJantouCnt.clone();
+	public boolean is4Mentsu(int[] cnt) {
 		int Max = cnt[0];
 		int MaxTile = 0;
 		for (int i = 0; i < cnt.length; i++) {
@@ -275,16 +215,39 @@ public class Judge {
 		return "平和";
 	}
 
-	public static int tanyao(int[] handCount) {
-		int[] cnt = handCount.clone();
-		if (cnt[0] == 0 && cnt[8] == 0 &&  cnt[9] == 0 &&  cnt[17] == 0 &&  cnt[18] == 0 && 
-				cnt[26] == 0 &&  cnt[27] == 0 &&  cnt[28] == 0 &&  cnt[29] == 0 &&  cnt[30] == 0 && 
-				cnt[31] == 0 &&  cnt[32] == 0 &&  cnt[33] == 0) {
-			return 1;
+	public void tanyao() {
+		int[] cnt = newHandCounts();
+		if (cnt[0] == 0 || cnt[8] == 0 || cnt[9] == 0 || cnt[17] == 0 || cnt[18] == 0 ||
+				cnt[26] == 0 || cnt[27] == 0 || cnt[28] == 0 || cnt[29] == 0 || cnt[30] == 0 ||
+				cnt[31] == 0 || cnt[32] == 0 || cnt[33] == 0) {
+			this.hands.add(Hands.TANYAO);
 		} else {
 			// TODO: removeIf()を使ってラムダ式で消す条件とか決めてできるらしーぞ
-			return 0;
 		}
+	}
+
+	public static String ipeko() {
+		return "一盃口";
+	}
+
+	public boolean isAgari() {
+		return this.isAgari;
+	}
+
+	public boolean isTempai() {
+		return this.isTempai;
+	}
+
+	public List<Hands> getHands() {
+		return this.hands;
+	}
+
+	public int getHan() {
+		return this.han;
+	}
+
+	public int getPoint() {
+		return this.point;
 	}
 
 }
