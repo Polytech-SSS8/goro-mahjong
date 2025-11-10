@@ -9,7 +9,6 @@ import tiles.TileType;
  * 手牌の役を判定するJudgeクラスです。
  * 判定情報を格納したArrayListを返すstaticなメソッドを持ちます。
  */
-//TODO 判定情報を格納したarraylistを返すstaticクラスにする
 public class Judge {
 	private boolean isAgari;
 	private boolean isTempai;
@@ -37,22 +36,25 @@ public class Judge {
 		this.point = point;
 	}
 
-	//メソッド
+	// メソッド
 	/**
 	 * 判定結果の全情報を格納したListを返す静的メソッドです。
 	 * 
 	 * @param 手牌のList
 	 * @return 判定結果List
-	 * 
 	 */
 	public static List<Integer> judgeHand(List<TileType> hand) {
-		int[] cnt = newHandCounts(hand);
+		int agariTile = hand.getLast().getId();
+		int[] cnt = newHandCount(hand);
 		List<Integer> judge = new ArrayList<Integer>();
 		judge.add(judgeAgari(cnt));
+		if (judge.getFirst() == 1) {
+
+		}
 		judge.add(judgeTempai(cnt));
 		judge.add(tanyao(cnt));
-		
-		
+		judge.add(sevenPairs(cnt));
+
 		return judge;
 	}
 
@@ -77,30 +79,17 @@ public class Judge {
 	}
 
 	/**
-	 * このインスタンスのhandフィールドから上がり判定に必要なint型handCounts配列を作成するメソッドです
-	 * 
-	 * @return int型handCounts配列(要素数34)
-	 *//*
-		public static int[] newHandCounts(List<TileType> hand) {
-		int[] handCounts = new int[34];
-		for (TileType h : hand) {
-			handCounts[h.getId()]++;
-		}
-		return handCounts;
-		}*/
-
-	/**
-	 * 引数の手牌Listから上がり判定に必要なint型handCounts配列を作成するメソッドです
+	 * 引数の手牌Listから上がり判定に必要なint型handCount配列を作成するメソッドです
 	 * 
 	 * @param hand
 	 * @return int型handCounts配列(要素数34)
 	 */
-	public static int[] newHandCounts(List<TileType> hand) {
-		int[] handCounts = new int[34];
+	private static int[] newHandCount(List<TileType> hand) {
+		int[] handCount = new int[34];
 		for (TileType h : hand) {
-			handCounts[h.getId()]++;
+			handCount[h.getId()]++;
 		}
-		return handCounts;
+		return handCount;
 	}
 
 	/**
@@ -153,6 +142,9 @@ public class Judge {
 	 * @return 上がり形が成立していればtrue
 	 */
 	public static int judgeAgari(int[] handCount) {
+		if (sevenPairs(handCount) == 1) {
+			return 1;
+		}
 		for (int i = 0; i < handCount.length; i++) {
 			if (handCount[i] >= 2) {
 				int[] cnt = handCount.clone();
@@ -164,10 +156,12 @@ public class Judge {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * 【再帰メソッド】残りの手牌で指定された数の面子を作れるかを判定します。
+	 * judgeAgariメソッドの補助メソッドです。
 	 * * @param handCount 雀頭や面子を抜いた後の手牌カウント配列 (コピーを渡すこと推奨)
+	 * 
 	 * @param requiredMenzen 残り必要な面子の数
 	 * @return 成立していれば true
 	 */
@@ -192,7 +186,7 @@ public class Judge {
 			// コピーを作成し、刻子を抜き出す
 			int[] cntForKotsu = handCount.clone();
 			cntForKotsu[startTileId] -= 3;
-			
+
 			// 残りの面子 requiredMenzen-1 が作れるか再帰的にチェック
 			if (is4MentsuRecursive(cntForKotsu, requiredMenzen - 1)) {
 				return true; // 成功
@@ -203,18 +197,18 @@ public class Judge {
 		// 4. 順子 (シュンツ) 抜き出しを試行
 		// **********************************************
 		// 数牌かつ 9牌ではない (IDが7, 8, 16, 17, 25, 26ではない) ことをチェック
-		if (startTileId < 27 && (startTileId % 9) < 7) { 
+		if (startTileId < 27 && (startTileId % 9) < 7) {
 			int nextTile1 = startTileId + 1;
 			int nextTile2 = startTileId + 2;
 
 			if (handCount[nextTile1] >= 1 && handCount[nextTile2] >= 1) {
 				// 順子を抜き出すための新しいコピー
 				int[] cntForShuntsu = handCount.clone();
-				
+
 				cntForShuntsu[startTileId] -= 1;
 				cntForShuntsu[nextTile1] -= 1;
 				cntForShuntsu[nextTile2] -= 1;
-				
+
 				// 残りの面子 requiredMenzen-1 が作れるか再帰的にチェック
 				if (is4MentsuRecursive(cntForShuntsu, requiredMenzen - 1)) {
 					return true; // 成功
@@ -234,7 +228,7 @@ public class Judge {
 	 * @param 雀頭を抜いた手牌IDのint型配列
 	 * @return 4面子があればtrue
 	 */
-	public static boolean is4Mentsu(int[] /*cnt*/ outJantouCnt) {
+	public static boolean is4Mentsu(int[] /* cnt */ outJantouCnt) {
 		int[] cnt = outJantouCnt.clone();
 		int Max = cnt[0];
 		int MaxTile = 0;
@@ -270,16 +264,73 @@ public class Judge {
 		return true;
 	}
 
-	public static String pinfu() {
-
-		return "平和";
+	// TODO 上がり確定後のロジック詰めないとだめ
+	/**
+	 * jantou
+	 * 
+	 * @param
+	 * @return
+	 */
+	private static boolean isRyammen(int[] handCount, int agariTile) {
+		for (int i = 0; i < handCount.length; i++) {
+			if (handCount[i] >= 2) {
+				int[] cnt = handCount.clone();
+				cnt[i] -= 2;
+				if (is4Chow(cnt, 4, agariTile)) {
+					if (i == agariTile) {
+						return false;
+					}
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
+	public static boolean is4Chow(int[] handCount, int requiredChow, int agariTile) {
+		if (requiredChow == 0) {
+			return true;
+		}
+		int startTileId = findFirstTile(handCount);
+		if (startTileId == -1) {
+			return false;
+		}
+		if (startTileId < 27 && (startTileId % 9) < 7) {
+			int nextTile1 = startTileId + 1;
+			int nextTile2 = startTileId + 2;
+
+			if (handCount[nextTile1] >= 1 && handCount[nextTile2] >= 1) {
+				// 順子を抜き出すための新しいコピー
+				int[] cntChow = handCount.clone();
+
+				cntChow[startTileId] -= 1;
+				cntChow[nextTile1] -= 1;
+				cntChow[nextTile2] -= 1;
+
+				// 残りの面子 requiredMenzen-1 が作れるか再帰的にチェック
+				if (is4Chow(cntChow, requiredChow - 1, agariTile)) {
+					return true; // 成功
+				}
+			}
+		}
+		return false;
+	}
+
+	public static int pinfu(int[] handCount, int agariTile) {
+		return 0;
+	}
+
+	/**
+	 * 断么九を判定するメソッドです。
+	 * 
+	 * @param 手牌カウント配列
+	 * @return 成立なら1、非成立なら0
+	 */
 	public static int tanyao(int[] handCount) {
 		int[] cnt = handCount.clone();
-		if (cnt[0] == 0 && cnt[8] == 0 &&  cnt[9] == 0 &&  cnt[17] == 0 &&  cnt[18] == 0 && 
-				cnt[26] == 0 &&  cnt[27] == 0 &&  cnt[28] == 0 &&  cnt[29] == 0 &&  cnt[30] == 0 && 
-				cnt[31] == 0 &&  cnt[32] == 0 &&  cnt[33] == 0) {
+		if (cnt[0] == 0 && cnt[8] == 0 && cnt[9] == 0 && cnt[17] == 0 && cnt[18] == 0 &&
+				cnt[26] == 0 && cnt[27] == 0 && cnt[28] == 0 && cnt[29] == 0 && cnt[30] == 0 &&
+				cnt[31] == 0 && cnt[32] == 0 && cnt[33] == 0) {
 			return 1;
 		} else {
 			// TODO: removeIf()を使ってラムダ式で消す条件とか決めてできるらしーぞ
@@ -287,4 +338,22 @@ public class Judge {
 		}
 	}
 
+	/**
+	 * 七対子を判定するメソッドです。
+	 * 
+	 * @param 手牌カウント配列
+	 * @return 成立なら1、非成立なら0
+	 */
+	public static int sevenPairs(int[] handCount) {
+		int toitsu = 0;
+		for (int i = 0; i < handCount.length; i++) {
+			if (handCount[i] == 2) {
+				toitsu++;
+			}
+			if (toitsu == 7) {
+				return 1;
+			}
+		}
+		return 0;
+	}
 }

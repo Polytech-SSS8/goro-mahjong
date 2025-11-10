@@ -61,7 +61,38 @@ public enum TileType implements Comparable<TileType> {
     }
 
     /**
+     * IDを引数にその牌を取得します。
+     * 
+     * @param ID
+     * @return 牌
+     */
+    public static TileType getTile(int id) {
+        for (TileType tile : TileType.values()) {
+            if (tile.id == id) {
+                return tile;
+            }
+        }
+        throw new IllegalArgumentException("Invalid JudgeResult ID: " + id);
+    }
+
+    /**
+     * 表示名を引数にその牌を取得します。
+     * 
+     * @param 表示名
+     * @return 牌
+     */
+    public static TileType getTile(String name2) {
+        for (TileType tile : TileType.values()) {
+            if (tile.name2.equals(name2)) {
+                return tile;
+            }
+        }
+        throw new IllegalArgumentException("Invalid JudgeResult ID: " + name2);
+    }
+
+    /**
      * 牌の一意なIDを取得します。
+     * ordinal()メソッドがあるのでいらないかもしれません。
      * 
      * @return 牌のID
      */

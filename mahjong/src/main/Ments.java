@@ -8,12 +8,12 @@ import tiles.TileType;
  * 麻雀の面子(CP含むゲームの参加者)が持つべきメソッドを定義するインターフェースです。
  */
 public interface Ments {
-	
-	/**
-	 * ツモるメソッドです。
-	 */
-	void Tsumo(List<TileType> tsumo);
-	
+
+    /**
+     * ツモるメソッドです。
+     */
+    void tsumo(List<TileType> tsumo);
+
     /**
      * 打牌するメソッドです。
      * 

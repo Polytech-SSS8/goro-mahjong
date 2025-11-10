@@ -13,75 +13,80 @@ import tiles.TileType;
  * 面子インターフェースをインプリメントします。
  */
 public class Player implements Ments {
-    private List<TileType> hand;
-    private boolean riichi; // リーチ
-    private boolean menzen; // メンゼン
-    private boolean call; // 副露の有無
-    private int[] openedTiles; // 副露または暗槓した手牌コードを格納
-    private boolean kan; // カンの有無
-    private int point; // 点棒
-    private List<Integer> agari;//あがり情報が入ったリスト
+	private List<TileType> hand;
+	private boolean riichi; // リーチ
+	private boolean menzen; // メンゼン
+	private boolean call; // 副露の有無
+	private int[] openedTiles; // 副露または暗槓した手牌コードを格納
+	private boolean kan; // カンの有無
+	private int point; // 点棒
+	private List<Integer> agari;// あがり情報が入ったリスト
 
-    // コンストラクタ
-    public Player() {
-        super();
-        this.hand = new ArrayList<TileType>();
-    }
+	// コンストラクタ
+	public Player() {
+		super();
+		this.hand = new ArrayList<TileType>();
+	}
 
-    // メソッド
-    public void Haipai(List<TileType> haipai) {
-    	if(this.hand.isEmpty()) {
-    		this.hand = haipai;
-    	}else {
-    		System.out.println("すでに牌は配られてるよ");
-    	}
-    }
-    
-    public void Agari() {
-    	System.out.println("あがり！！");
-    	if(this.agari.get(2) == 1) {
-    		System.out.println("役はタンヤオ！");
-    		System.exit(0);
-    	}else{
-    		System.exit(0);
-    	}
-    }
-    
-    public void sortHand(List<TileType> hand) {
-        /**
-         * 手牌を萬子、筒子、索子、風牌、三元牌の順でソートする
-         * 
-         * @param ソート前の手牌リスト
-         * @return ソート後の手牌リスト
-         */
-        Collections.sort(hand);
-    }
-    
-    @Override
-    public void Tsumo(List<TileType> tsumo) {
-    	sortHand(this.hand);
-    	this.hand.addAll(tsumo);
-    	System.out.println(tsumo + "をツモってきたよ");
-    	this.agari = Judge.judgeHand(this.hand);
-		System.out.println(this.hand);
-		if(this.agari.get(0) == 1) {
-			Agari();
+	// メソッド
+	public void haipai(List<TileType> haipai) {
+		if (this.hand.isEmpty()) {
+			this.hand = haipai;
+		} else {
+			System.out.println("すでに牌は配られてるよ");
 		}
-		if(this.agari.get(1) == 1) {
+	}
+
+	public void agari() {
+		System.out.println("あがり！！");
+		if (this.agari.get(2) == 1 && this.agari.get(3) == 1) {
+			System.out.println("役はタンヤオ、チートイツ！");
+			System.exit(0);
+		} else if (this.agari.get(2) == 1) {
+			System.out.println("役はタンヤオ！");
+		} else if (this.agari.get(3) == 1) {
+			System.out.println("役はチートイツ！");
+		} else {
+			System.exit(0);
+		}
+	}
+
+	public void sortHand(List<TileType> hand) {
+		/**
+		 * 手牌を萬子、筒子、索子、風牌、三元牌の順でソートする
+		 * 
+		 * @param ソート前の手牌リスト
+		 * @return ソート後の手牌リスト
+		 */
+		Collections.sort(hand);
+	}
+
+	@Override
+	public void tsumo(List<TileType> tsumo) {
+		sortHand(this.hand);
+		this.hand.addAll(tsumo);
+		System.out.println(tsumo + "をツモってきたよ");
+		this.agari = Judge.judgeHand(this.hand);
+		System.out.println(this.hand);
+		if (this.agari.get(0) == 1) {
+			agari();
+		}
+		if (this.agari.get(1) == 1) {
 			System.out.println("テンパイ！");
 		}
-    }
-    
-    @Override
-    	/**
-	     * プレイヤーが打牌するメソッドです。
-	     * @return 打牌
-	     */
-    public List<TileType> discard() {
-    	if(this.hand.size() <= 0 || this.hand.size() >= 15) {
-    		throw new IllegalArgumentException("枚数おかしくない？");
-    	}
-    	System.out.println("なに切る？");
+	}
+
+	@Override
+	/**
+	 * プレイヤーが打牌するメソッドです。
+	 * 
+	 * @return 打牌
+	 */
+	public List<TileType> discard() {
+		if (this.hand.size() <= 0 || this.hand.size() >= 15) {
+			throw new IllegalArgumentException("枚数おかしくない？");
+		}
+		System.out.println("なに切る？");
 		int nanikiru = 13;
 
 		do {
@@ -100,41 +105,41 @@ public class Player implements Ments {
 			}
 		} while (true);
 		System.out.println(this.hand.get(nanikiru) + "を切るよ\n");
-		
-			// 牌山の先頭から指定枚数のリストをサブリストとして取得
-	        List<TileType> discard = new ArrayList<>(this.hand.subList(nanikiru,nanikiru+1));
 
-	        // 牌山から取り出した牌を削除
-	        // 注意: subListのclear()は元のリストからも要素を削除します
-	        this.hand.subList(nanikiru,nanikiru+1).clear();
+		// 牌山の先頭から指定枚数のリストをサブリストとして取得
+		List<TileType> discard = new ArrayList<>(this.hand.subList(nanikiru, nanikiru + 1));
 
-	        return discard;
-	    
-    }
+		// 牌山から取り出した牌を削除
+		// 注意: subListのclear()は元のリストからも要素を削除します
+		this.hand.subList(nanikiru, nanikiru + 1).clear();
 
-    @Override
-    public void call(TileType discard) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'call'");
-    }
+		return discard;
 
-    @Override
-    public List<TileType> pon(TileType discard) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'pon'");
-    }
+	}
 
-    @Override
-    public List<TileType> chii(TileType discard) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'chii'");
-    }
+	@Override
+	public void call(TileType discard) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'call'");
+	}
 
-    @Override
-    public List<TileType> kan(TileType discard) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'kan'");
-    }
+	@Override
+	public List<TileType> pon(TileType discard) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'pon'");
+	}
+
+	@Override
+	public List<TileType> chii(TileType discard) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'chii'");
+	}
+
+	@Override
+	public List<TileType> kan(TileType discard) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'kan'");
+	}
 
 	public List<TileType> getHand() {
 		return hand;
@@ -191,7 +196,5 @@ public class Player implements Ments {
 	public void setPoint(int point) {
 		this.point = point;
 	}
-    
-    
 
 }
