@@ -8,7 +8,7 @@ import java.util.Scanner;
  */
 public class Main {
 	public static void main(String[] args) {
-		System.out.println("麻雀v0.2");
+		System.out.println("麻雀v0.2.2");
 		System.out.println("一雀頭四面子作れたらあがりだよ");
 		System.out.println("タンヤオとチートイツがわかるよ");
 		System.out.println("はじめる？");

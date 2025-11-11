@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import tiles.TileType;
@@ -10,6 +11,7 @@ import tiles.TileType;
  * 判定情報を格納したArrayListを返すstaticなメソッドを持ちます。
  */
 public class Judge {
+	
 	private boolean isAgari;
 	private boolean isTempai;
 	private List<Hands> hands;
@@ -44,7 +46,7 @@ public class Judge {
 	 * @return 判定結果List
 	 */
 	public static List<Integer> judgeHand(List<TileType> hand) {
-		int agariTile = hand.getLast().getId();
+		int agariTileId = hand.getLast().getId();
 		int[] cnt = newHandCount(hand);
 		List<Integer> judge = new ArrayList<Integer>();
 		judge.add(judgeAgari(cnt));
@@ -57,7 +59,87 @@ public class Judge {
 
 		return judge;
 	}
-
+	
+	//TODO
+	/**
+	 * すべての待ちパターンを調べます。戻り値は未定です。
+	 */
+	public static void judgeMachi() {
+		
+	}
+	
+	/**
+	 * リャンメンかどうかを調べます。
+	 * @param 手牌のカウント配列
+	 * @param あがり牌のID
+	 * @retuern リャンメンならtrue
+	 */
+	public static boolean isRyammen(int[] handCount, int agariTileId) {
+		if(agariTileId < 27) {
+			//あがり、〇、〇パターン
+			if(agariTileId % 9 != 7 && agariTileId % 9 != 8) {
+				int[] cnt = handCount.clone();
+				cnt[agariTileId]--;
+				cnt[agariTileId + 1]--;
+				cnt[agariTileId + 2]--;
+				if(judgeAgari(cnt) == 1) {
+					return true;
+				}
+			}
+			//〇、〇、あがりパターン
+			if(agariTileId % 9 != 0 && agariTileId % 9 != 1) {
+				int[] cnt = handCount.clone();
+				cnt[agariTileId]--;
+				cnt[agariTileId + 1]--;
+				cnt[agariTileId + 2]--;
+				if(judgeAgari(cnt) == 1) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * カンチャンかどうかを調べます。
+	 */
+	public static boolean isKanchan(int[] handCount, int agariTileId) {
+		if(agariTileId < 27) {
+			if(agariTileId % 9 != 0 && agariTileId % 9 != 9) {
+				int[] cnt = handCount.clone();
+				cnt[agariTileId - 1]--;
+				cnt[agariTileId]--;
+				cnt[agariTileId + 1]--;
+				if(judgeAgari(cnt) == 1) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	//TODO
+	/**
+	 * シャンポンかどうか調べます。
+	 */
+	public static boolean isShampon(int[]handCount, int agariTileId) {
+		if (handCount[agariTileId] >= 3) {
+			int[] cnt = handCount.clone();
+			if(judgeAgari(cnt) == 1) {
+				cnt[agariTileId]--;
+				if(judgeAgari(cnt) == 1) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isPenchan() {
+		return false;
+	}
+	
 	@Override
 	public String toString() {
 		String agari = this.isAgari == true ? "あがり！" : "notあがり";
@@ -134,9 +216,23 @@ public class Judge {
 		}
 		return 0;
 	}
+	
+	/**
+	 * 雀頭を抜いた形の手牌カウント配列から、残りの面子数を返すメソッドです。
+	 * @param 手牌カウント配列(雀頭抜き)
+	 * @return 残りの面子数
+	 */
+	public static int remainMentsu(int[] handCount){
+		int remainMentsu = 4;
+		int tiles = Arrays.stream(handCount).sum();
+		remainMentsu = tiles / 3; 
+		return remainMentsu;
+	}
+	
 
 	/**
 	 * 手牌が基本形であがっているかを判定するメソッドです。
+	 * 雀頭候補を二枚抜き出し、残り4面子を再起呼び出しで処理します。
 	 * 
 	 * @param 手牌IDのint型配列
 	 * @return 上がり形が成立していればtrue
@@ -149,7 +245,8 @@ public class Judge {
 			if (handCount[i] >= 2) {
 				int[] cnt = handCount.clone();
 				cnt[i] -= 2;
-				if (is4MentsuRecursive(cnt, 4)) {
+				int remainMentsu = remainMentsu(cnt);
+				if (is4MentsuRecursive(cnt, remainMentsu)) {
 					return 1;
 				}
 			}
@@ -264,28 +361,6 @@ public class Judge {
 		return true;
 	}
 
-	// TODO 上がり確定後のロジック詰めないとだめ
-	/**
-	 * jantou
-	 * 
-	 * @param
-	 * @return
-	 */
-	private static boolean isRyammen(int[] handCount, int agariTile) {
-		for (int i = 0; i < handCount.length; i++) {
-			if (handCount[i] >= 2) {
-				int[] cnt = handCount.clone();
-				cnt[i] -= 2;
-				if (is4Chow(cnt, 4, agariTile)) {
-					if (i == agariTile) {
-						return false;
-					}
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 
 	public static boolean is4Chow(int[] handCount, int requiredChow, int agariTile) {
 		if (requiredChow == 0) {

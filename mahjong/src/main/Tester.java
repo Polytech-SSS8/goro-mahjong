@@ -14,10 +14,9 @@ public class Tester {
 
 		// あがり形を指定して判定テスト
 		List<TileType> agari = new ArrayList<>();
-
-		String a = "一一二二三三四四五五六六七八";
+		String a = "一一二三四五六七九九九111";
 		String[] ab = a.split("");
-		for (int i = 0; i < 14; i++) {
+		for (int i = 0; i < ab.length; i++) {
 			agari.add(TileType.getTile(ab[i]));
 		}
 		System.out.println(agari);
@@ -40,5 +39,10 @@ public class Tester {
 		// judgeHand(agari)で返ってきたリストをシスアウト
 		System.out.println("--↓[あがり、てんぱい、役]");
 		System.out.println(Judge.judgeHand(agari));
+		
+		System.out.println("--↓isRyammenテスト");
+		System.out.println(Judge.isRyammen(cntAgari,2));
+		System.out.println("--isKanchanテスト");
+		System.out.println(Judge.isKanchan(cntAgari,2));
 	}
 }
