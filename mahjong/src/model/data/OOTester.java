@@ -1,10 +1,8 @@
-package main;
+package model.data;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import tiles.TileType;
 
 /**
  * Object Orientedな動きをできているか確認するクラスです

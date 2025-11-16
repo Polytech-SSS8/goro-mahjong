@@ -1,4 +1,4 @@
-package main;
+package model.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,14 +6,13 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import tiles.TileType;
-
 /**
  * 麻雀の面子の一人、プレイヤーを定義するクラスです。
- * 面子インターフェースをインプリメントします。
+ * 面子クラスを継承します。
  */
-public class Player implements Ments {
-	private List<TileType> hand;
+public class Player extends Mentsu {
+	private static final int id = 0; // プレイヤーid
+	private List<TileType> hand;// 手牌
 	private boolean riichi; // リーチ
 	private boolean menzen; // メンゼン
 	private boolean call; // 副露の有無

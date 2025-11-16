@@ -1,4 +1,4 @@
-package tiles;
+package model.data;
 
 /**
  * 麻雀牌を定義する列挙型です。

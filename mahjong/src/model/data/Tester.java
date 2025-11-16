@@ -1,9 +1,7 @@
-package main;
+package model.data;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import tiles.TileType;
 
 /**
  * あがり形を指定してJudgeクラスをテストするクラスです。
@@ -39,10 +37,12 @@ public class Tester {
 		// judgeHand(agari)で返ってきたリストをシスアウト
 		System.out.println("--↓[あがり、てんぱい、役]");
 		System.out.println(Judge.judgeHand(agari));
-		
+
 		System.out.println("--↓isRyammenテスト");
-		System.out.println(Judge.isRyammen(cntAgari,2));
+		System.out.println(Judge.isRyammen(cntAgari, 18));
 		System.out.println("--isKanchanテスト");
-		System.out.println(Judge.isKanchan(cntAgari,2));
+		System.out.println(Judge.isKanchan(cntAgari, 18));
+		System.out.println("--↓isShamponテスト");
+		System.out.println(Judge.isShampon(cntAgari, 18));
 	}
 }

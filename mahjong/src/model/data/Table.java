@@ -1,15 +1,16 @@
-package main;
+package model.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-
-import tiles.TileType;
+import java.util.Map;
 
 public class Table {
     private List<TileType> wall; // 牌山
     private List<TileType> discard; // 打牌
-    private List<TileType> discardTiles; // 捨て牌
+    // private List<TileType> discardTiles; // 捨て牌
+    private Map<Mentsu, List<TileType>> discardTiles = new HashMap<>();// 捨て牌
     private TileType dora; // ドラ表示牌
     private int turn; // 巡目
     private int honba; // ◯本場
@@ -17,17 +18,14 @@ public class Table {
     private List<TileType> pon; // ポン。playersTableみたいに各人のテーブルに持たせる？
     private List<TileType> chii; // チー。playersTableみたいに各人のテーブルに持たせる？
     private List<TileType> kan; // カン。playersTableみたいに各人のテーブルに持たせる？
-    
-    //コンストラクタ
+
+    // コンストラクタ
     public Table() {
-    	super();
-    	this.discard = new ArrayList<TileType>();
-    	this.discardTiles = new ArrayList<TileType>();
-    	
+        super();
+        this.discard = new ArrayList<TileType>();
+
     }
-    
-    
-    
+
     public void sortHand(List<TileType> hand) {
         /**
          * 手牌を萬子、筒子、索子、風牌、三元牌の順でソートする
@@ -37,7 +35,6 @@ public class Table {
          */
         Collections.sort(hand);
     }
-    
 
     public List<TileType> createWall() {
         /**
@@ -94,86 +91,84 @@ public class Table {
         return hand;
     }
 
-	public List<TileType> getWall() {
-		return wall;
-	}
+    public List<TileType> getWall() {
+        return wall;
+    }
 
-	public void setWall(List<TileType> wall) {
-		this.wall = wall;
-	}
+    public void setWall(List<TileType> wall) {
+        this.wall = wall;
+    }
 
-	public List<TileType> getDiscard() {
-		return discard;
-	}
+    public List<TileType> getDiscard() {
+        return discard;
+    }
 
-	public void setDiscard(List<TileType> discard) {
-		this.discard = discard;
-	}
+    public void setDiscard(List<TileType> discard) {
+        this.discard = discard;
+    }
 
-	public List<TileType> getDiscardTiles() {
-		return discardTiles;
-	}
+    public Map<Mentsu, List<TileType>> getDiscardTiles() {
+        return this.discardTiles;
+    }
 
-	public void setDiscardTiles(List<TileType> discardTiles) {
-		this.discardTiles = discardTiles;
-	}
+    public void setDiscardTiles(Map<Mentsu, List<TileType>> discardTiles) {
+        this.discardTiles = discardTiles;
+    }
 
-	public TileType getDora() {
-		return dora;
-	}
+    public TileType getDora() {
+        return dora;
+    }
 
-	public void setDora(TileType dora) {
-		this.dora = dora;
-	}
+    public void setDora(TileType dora) {
+        this.dora = dora;
+    }
 
-	public int getTurn() {
-		return turn;
-	}
+    public int getTurn() {
+        return turn;
+    }
 
-	public void setTurn(int turn) {
-		this.turn = turn;
-	}
+    public void setTurn(int turn) {
+        this.turn = turn;
+    }
 
-	public int getHonba() {
-		return honba;
-	}
+    public int getHonba() {
+        return honba;
+    }
 
-	public void setHonba(int honba) {
-		this.honba = honba;
-	}
+    public void setHonba(int honba) {
+        this.honba = honba;
+    }
 
-	public int getRiichiStick() {
-		return riichiStick;
-	}
+    public int getRiichiStick() {
+        return riichiStick;
+    }
 
-	public void setRiichiStick(int riichiStick) {
-		this.riichiStick = riichiStick;
-	}
+    public void setRiichiStick(int riichiStick) {
+        this.riichiStick = riichiStick;
+    }
 
-	public List<TileType> getPon() {
-		return pon;
-	}
+    public List<TileType> getPon() {
+        return pon;
+    }
 
-	public void setPon(List<TileType> pon) {
-		this.pon = pon;
-	}
+    public void setPon(List<TileType> pon) {
+        this.pon = pon;
+    }
 
-	public List<TileType> getChii() {
-		return chii;
-	}
+    public List<TileType> getChii() {
+        return chii;
+    }
 
-	public void setChii(List<TileType> chii) {
-		this.chii = chii;
-	}
+    public void setChii(List<TileType> chii) {
+        this.chii = chii;
+    }
 
-	public List<TileType> getKan() {
-		return kan;
-	}
+    public List<TileType> getKan() {
+        return kan;
+    }
 
-	public void setKan(List<TileType> kan) {
-		this.kan = kan;
-	}
-    
-    
+    public void setKan(List<TileType> kan) {
+        this.kan = kan;
+    }
 
 }

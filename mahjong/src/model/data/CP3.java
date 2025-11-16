@@ -1,4 +1,4 @@
-package main;
+package model.data;
 
 /**
  * 麻雀の面子の一人、コンピュータープレイヤーの三人目を定義するクラスです。

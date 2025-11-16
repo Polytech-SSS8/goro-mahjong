@@ -1,4 +1,4 @@
-package main;
+package model.data;
 
 /**
  * 麻雀の役を定義する列挙型です。
