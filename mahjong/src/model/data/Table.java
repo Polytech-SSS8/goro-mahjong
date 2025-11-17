@@ -6,16 +6,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Table extends SubjectTable{
-	
+public class Table extends SubjectTable {
+
+    // フィールド
+    private int round; // 局数
+    private int dealer; // 親の位置
+    private Map<Mentsu, Integer> points; // 点数管理
+    private static final int initialPoints = 25000; // 初期点数
+    private static final int totalPoints = 100000; // 総点数
+
+    private Map<Mentsu, Integer> directs; // 風（0,東 1,南 2,西 3,北）
+    private int MentsuCount; // 面子の数
+
     private List<TileType> wall; // 牌山
     private Map<Mentsu, List<TileType>> discard = new HashMap<>(); // 打牌
-    
+
     private TileType dora; // ドラ表示牌
     private int turn; // 巡目
     private int honba; // ◯本場
     private int riichiStick; // リーチ棒の本数
-    
+
     private Map<Mentsu, List<TileType>> discardTiles = new HashMap<>();// インスタンスをキー値にした捨て牌マップ
     private Map<Mentsu, List<TileType>> pon = new HashMap<>(); // ポン
     private Map<Mentsu, List<TileType>> chii = new HashMap<>(); // チー
@@ -99,12 +109,12 @@ public class Table extends SubjectTable{
     public void setWall(List<TileType> wall) {
         this.wall = wall;
     }
-    
+
     @Override
     public Map<Mentsu, List<TileType>> getDiscard() {
         return discard;
     }
-    
+
     public void setDiscard(Map<Mentsu, List<TileType>> discard) {
         this.discard = discard;
     }
@@ -149,36 +159,44 @@ public class Table extends SubjectTable{
         this.riichiStick = riichiStick;
     }
 
-    public Map<Mentsu,List<TileType>> getPon() {
+    public Map<Mentsu, List<TileType>> getPon() {
         return pon;
     }
 
-    public void setPon(Map<Mentsu,List<TileType>> pon) {
+    public void setPon(Map<Mentsu, List<TileType>> pon) {
         this.pon = pon;
     }
 
-    public Map<Mentsu,List<TileType>> getChii() {
+    public Map<Mentsu, List<TileType>> getChii() {
         return chii;
     }
 
-    public void setChii(Map<Mentsu,List<TileType>> chii) {
+    public void setChii(Map<Mentsu, List<TileType>> chii) {
         this.chii = chii;
     }
 
-    public Map<Mentsu,List<TileType>> getKan() {
+    public Map<Mentsu, List<TileType>> getKan() {
         return kan;
     }
 
-    public void setKan(Map<Mentsu,List<TileType>> kan) {
+    public void setKan(Map<Mentsu, List<TileType>> kan) {
         this.kan = kan;
     }
 
-	
+    @Override
+    public List<TileType> getDiscardList() {
+        return this.discard.values().iterator().next();
+    }
 
-	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public TileType getDiscardTile() {
+        return this.discard.values().iterator().next().get(0);
+    }
+
+    @Override
+    public void execute() {
+        // TODO Auto-generated method stub
+
+    }
 
 }

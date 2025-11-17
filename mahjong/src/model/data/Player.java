@@ -12,7 +12,7 @@ import java.util.Scanner;
  * 麻雀の面子の一人、プレイヤーを定義するクラスです。
  * 面子クラスを継承、オブザーバーインターフェースをインプリメントします。
  */
-public class Player extends Mentsu implements Observer{
+public class Player extends Mentsu implements Observer {
 	private static final int id = 0; // プレイヤーid。プレイ人数増やすならstatic finalをなくす
 	private List<TileType> hand;// 手牌
 	private boolean riichi; // リーチ
@@ -30,8 +30,7 @@ public class Player extends Mentsu implements Observer{
 	}
 
 	// メソッド
-	
-	
+
 	public void haipai(List<TileType> haipai) {
 		if (this.hand.isEmpty()) {
 			this.hand = haipai;
@@ -66,13 +65,76 @@ public class Player extends Mentsu implements Observer{
 
 	@Override
 	public void update(SubjectTable table) {
-		if(!table.getDiscard().containsKey(this)) {
-			
-		}
-		
+		canCall(table);
+
 	}
-	
-	
+
+	/**
+	 * 副露できるかを判断するメソッドです。
+	 * 
+	 * @param table
+	 */
+	public void canCall(SubjectTable table) {
+		if (!table.getDiscard().containsKey(this)) {
+			Map<Mentsu, List<TileType>> callingTile = table.getDiscard();
+			List<Boolean> canCalls = Judge.canCall(this.hand, callingTile);
+			if (canCalls.get(0)) {
+				System.out.print(callingTile + "ポン？");
+			}
+			if (canCalls.get(1)) {
+				System.out.print(callingTile + "チー？");
+			}
+			if (canCalls.get(2)) {
+				System.out.print(callingTile + "カン？");
+			}
+			if (canCalls.get(3)) {
+				System.out.print(callingTile + "ロン？");
+			}
+			if (canCalls.get(0) || canCalls.get(1) || canCalls.get(2) || canCalls.get(3)) {
+				char callSelect = callSelect();
+				switch (callSelect) {
+					case 'p':
+						pon(table.getDiscardList());
+						break;
+					case 'c':
+						chii(table.getDiscardList());
+						break;
+					case 'k':
+						kan(table.getDiscardList());
+						break;
+					case 'r':
+						agari();
+						break;
+					case 'n':
+						System.out.println("スルーしたよ");
+						break;
+				}
+			}
+		}
+	}
+
+	public char callSelect() {
+		System.out.println("(p:ポン c:チー k:カン r:ロン n:しない)");
+		char callSelect = 'n';
+		do {
+			try {
+				Scanner scn = new Scanner(System.in);
+				String str = scn.nextLine();
+				callSelect = str.charAt(0);
+				if (callSelect != 'p' && callSelect != 'c' && callSelect != 'k' && callSelect != 'r'
+						&& callSelect != 'n') {
+					System.out.println("無効な文字だよ");
+					continue;
+				} else {
+					break;
+				}
+			} catch (InputMismatchException a) {
+				System.out.println("無効な入力だよ");
+			}
+		} while (true);
+		return callSelect;
+	}
+
 	@Override
 	public void tsumo(List<TileType> tsumo) {
 		sortHand(this.hand);
@@ -88,12 +150,17 @@ public class Player extends Mentsu implements Observer{
 		}
 	}
 
-	public Map<Mentsu, List<TileType>> discard(){
+	/**
+	 * 打牌するメソッドです。
+	 * 
+	 * @return 打牌マップ
+	 */
+	public Map<Mentsu, List<TileType>> discard() {
 		Map<Mentsu, List<TileType>> discard = new HashMap<>();
 		discard.put(this, selectDiscard());
 		return discard;
 	}
-	
+
 	@Override
 	/**
 	 * 打牌選択をするメソッドです。
@@ -139,15 +206,21 @@ public class Player extends Mentsu implements Observer{
 	public int hashCode() {
 		return this.id;
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
-		if(o == null) {return false;}
-		if(o instanceof Player == false) {return false;}
-		if(this.id == ((Player)o).id) {return true;}
+		if (o == null) {
+			return false;
+		}
+		if (o instanceof Player == false) {
+			return false;
+		}
+		if (this.id == ((Player) o).id) {
+			return true;
+		}
 		return false;
 	}
-	
+
 	@Override
 	public void call(TileType discard) {
 		// TODO Auto-generated method stub

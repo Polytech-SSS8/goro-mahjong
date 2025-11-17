@@ -3,6 +3,7 @@ package model.data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 手牌の役を判定するJudgeクラスです。
@@ -56,6 +57,79 @@ public class Judge {
 		judge.add(sevenPairs(cnt));
 
 		return judge;
+	}
+
+	public static List<Boolean> canCall(List<TileType> hand, Map<Mentsu, List<TileType>> discard) {
+		TileType discardTile = discard.values().iterator().next().get(0);
+		int discardId = discardTile.getId();
+		int[] handCount = newHandCount(hand);
+		List<Boolean> canCalls = new ArrayList<>();
+		// 刻子
+		canCalls.add(canPon(handCount, discardId));
+		// 槓子
+		canCalls.add(canKan(handCount, discardId));
+		// 順子
+		canCalls.add(canChii(handCount, discardId));
+		// ロン
+		canCalls.add(canRon(handCount, discardId));
+		return canCalls;
+	}
+
+	public static boolean canPon(int[] handCount, int discardId) {
+		if (handCount[discardId] >= 2) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean canKan(int[] handCount, int discardId) {
+		if (handCount[discardId] >= 3) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean canChii(int[] handCount, int discardId) {
+		if (discardId < 27) {
+			// 〇、〇、打牌パターン
+			if (discardId % 9 != 0 && discardId % 9 != 1) {
+				if (handCount[discardId - 2] >= 1 && handCount[discardId - 1] >= 1) {
+					return true;
+				}
+			}
+			// 〇、打牌、〇パターン
+			if (discardId % 9 != 0 && discardId % 9 != 8) {
+				if (handCount[discardId - 1] >= 1 && handCount[discardId + 1] >= 1) {
+					return true;
+				}
+			}
+			// 打牌、〇、〇パターン
+			if (discardId % 9 != 7 && discardId % 9 != 8) {
+				if (handCount[discardId + 1] >= 1 && handCount[discardId + 2] >= 1) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean canRon(int[] handCount, int discardId) {
+		int[] tempHandCount = handCount.clone();
+		tempHandCount[discardId]++;
+		if (judgeAgari(tempHandCount) == 1) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean canTsumo(List<TileType> hand, TileType tsumoTile) {
+		List<TileType> tempHand = new ArrayList<>(hand);
+		tempHand.add(tsumoTile);
+		int[] handCount = newHandCount(tempHand);
+		if (judgeAgari(handCount) == 1) {
+			return true;
+		}
+		return false;
 	}
 
 	// TODO

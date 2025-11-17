@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 麻雀の面子(CP含むゲームの参加者)が持つべきメソッドを定義するabstractクラスです。
  */
-public abstract class Mentsu implements Observer,Strategy{
+public abstract class Mentsu implements Observer, Strategy {
     // フィールド
     private List<TileType> hand;
     private boolean riichi; // リーチ
@@ -21,6 +21,11 @@ public abstract class Mentsu implements Observer,Strategy{
      * ツモるメソッドです。
      */
     void tsumo(List<TileType> tsumo) {
+
+    }
+
+    @Override
+    public void update(SubjectTable table) {
 
     }
 
