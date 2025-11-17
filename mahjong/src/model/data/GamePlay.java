@@ -4,7 +4,7 @@ package model.data;
  * 麻雀のゲーム進行を定義するクラスです。
  * まだとても曖昧です。
  */
-public class GamePlay implements Observer {
+public class GamePlay {
 	public boolean canPon;
 	public boolean canChii;
 	public boolean canKan;
@@ -13,10 +13,6 @@ public class GamePlay implements Observer {
 		this.canPon = false;
 		this.canChii = false;
 		this.canKan = false;
-	}
-
-	@Override
-	public void update() {
 	}
 
 }

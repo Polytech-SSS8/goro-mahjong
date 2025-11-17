@@ -6,23 +6,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Table {
+public class Table extends SubjectTable{
+	
     private List<TileType> wall; // 牌山
-    private List<TileType> discard; // 打牌
-    // private List<TileType> discardTiles; // 捨て牌
-    private Map<Mentsu, List<TileType>> discardTiles = new HashMap<>();// 捨て牌
+    private Map<Mentsu, List<TileType>> discard = new HashMap<>(); // 打牌
+    
     private TileType dora; // ドラ表示牌
     private int turn; // 巡目
     private int honba; // ◯本場
     private int riichiStick; // リーチ棒の本数
-    private List<TileType> pon; // ポン。playersTableみたいに各人のテーブルに持たせる？
-    private List<TileType> chii; // チー。playersTableみたいに各人のテーブルに持たせる？
-    private List<TileType> kan; // カン。playersTableみたいに各人のテーブルに持たせる？
+    
+    private Map<Mentsu, List<TileType>> discardTiles = new HashMap<>();// インスタンスをキー値にした捨て牌マップ
+    private Map<Mentsu, List<TileType>> pon = new HashMap<>(); // ポン
+    private Map<Mentsu, List<TileType>> chii = new HashMap<>(); // チー
+    private Map<Mentsu, List<TileType>> kan = new HashMap<>(); // カン
 
     // コンストラクタ
     public Table() {
         super();
-        this.discard = new ArrayList<TileType>();
 
     }
 
@@ -98,12 +99,13 @@ public class Table {
     public void setWall(List<TileType> wall) {
         this.wall = wall;
     }
-
-    public List<TileType> getDiscard() {
+    
+    @Override
+    public Map<Mentsu, List<TileType>> getDiscard() {
         return discard;
     }
-
-    public void setDiscard(List<TileType> discard) {
+    
+    public void setDiscard(Map<Mentsu, List<TileType>> discard) {
         this.discard = discard;
     }
 
@@ -147,28 +149,36 @@ public class Table {
         this.riichiStick = riichiStick;
     }
 
-    public List<TileType> getPon() {
+    public Map<Mentsu,List<TileType>> getPon() {
         return pon;
     }
 
-    public void setPon(List<TileType> pon) {
+    public void setPon(Map<Mentsu,List<TileType>> pon) {
         this.pon = pon;
     }
 
-    public List<TileType> getChii() {
+    public Map<Mentsu,List<TileType>> getChii() {
         return chii;
     }
 
-    public void setChii(List<TileType> chii) {
+    public void setChii(Map<Mentsu,List<TileType>> chii) {
         this.chii = chii;
     }
 
-    public List<TileType> getKan() {
+    public Map<Mentsu,List<TileType>> getKan() {
         return kan;
     }
 
-    public void setKan(List<TileType> kan) {
+    public void setKan(Map<Mentsu,List<TileType>> kan) {
         this.kan = kan;
     }
+
+	
+
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

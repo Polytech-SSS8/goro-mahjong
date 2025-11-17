@@ -2,16 +2,18 @@ package model.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
  * 麻雀の面子の一人、プレイヤーを定義するクラスです。
- * 面子クラスを継承します。
+ * 面子クラスを継承、オブザーバーインターフェースをインプリメントします。
  */
-public class Player extends Mentsu {
-	private static final int id = 0; // プレイヤーid
+public class Player extends Mentsu implements Observer{
+	private static final int id = 0; // プレイヤーid。プレイ人数増やすならstatic finalをなくす
 	private List<TileType> hand;// 手牌
 	private boolean riichi; // リーチ
 	private boolean menzen; // メンゼン
@@ -28,6 +30,8 @@ public class Player extends Mentsu {
 	}
 
 	// メソッド
+	
+	
 	public void haipai(List<TileType> haipai) {
 		if (this.hand.isEmpty()) {
 			this.hand = haipai;
@@ -61,6 +65,15 @@ public class Player extends Mentsu {
 	}
 
 	@Override
+	public void update(SubjectTable table) {
+		if(!table.getDiscard().containsKey(this)) {
+			
+		}
+		
+	}
+	
+	
+	@Override
 	public void tsumo(List<TileType> tsumo) {
 		sortHand(this.hand);
 		this.hand.addAll(tsumo);
@@ -75,13 +88,19 @@ public class Player extends Mentsu {
 		}
 	}
 
+	public Map<Mentsu, List<TileType>> discard(){
+		Map<Mentsu, List<TileType>> discard = new HashMap<>();
+		discard.put(this, selectDiscard());
+		return discard;
+	}
+	
 	@Override
 	/**
-	 * プレイヤーが打牌するメソッドです。
+	 * 打牌選択をするメソッドです。
 	 * 
 	 * @return 打牌
 	 */
-	public List<TileType> discard() {
+	public List<TileType> selectDiscard() {
 		if (this.hand.size() <= 0 || this.hand.size() >= 15) {
 			throw new IllegalArgumentException("枚数おかしくない？");
 		}
@@ -117,25 +136,38 @@ public class Player extends Mentsu {
 	}
 
 	@Override
+	public int hashCode() {
+		return this.id;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o == null) {return false;}
+		if(o instanceof Player == false) {return false;}
+		if(this.id == ((Player)o).id) {return true;}
+		return false;
+	}
+	
+	@Override
 	public void call(TileType discard) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'call'");
 	}
 
 	@Override
-	public List<TileType> pon(TileType discard) {
+	public void pon(List<TileType> discard) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'pon'");
 	}
 
 	@Override
-	public List<TileType> chii(TileType discard) {
+	public void chii(List<TileType> discard) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'chii'");
 	}
 
 	@Override
-	public List<TileType> kan(TileType discard) {
+	public void kan(List<TileType> discard) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'kan'");
 	}

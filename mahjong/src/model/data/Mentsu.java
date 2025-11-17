@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 麻雀の面子(CP含むゲームの参加者)が持つべきメソッドを定義するabstractクラスです。
  */
-public abstract class Mentsu {
+public abstract class Mentsu implements Observer,Strategy{
     // フィールド
     private List<TileType> hand;
     private boolean riichi; // リーチ
@@ -25,11 +25,11 @@ public abstract class Mentsu {
     }
 
     /**
-     * 打牌するメソッドです。
+     * 打牌選択をするメソッドです。
      * 
      * @return 打牌
      */
-    public List<TileType> discard() {
+    public List<TileType> selectDiscard() {
         List<TileType> discard = new ArrayList<>();
         return discard;
     }
