@@ -14,6 +14,7 @@ import java.util.Scanner;
  */
 public class Player extends Mentsu implements Observer {
 	private static final int id = 0; // プレイヤーid。プレイ人数増やすならstatic finalをなくす
+	private int wind; //自風(東,1 南,2 西,3 北,4)
 	private List<TileType> hand;// 手牌
 	private boolean riichi; // リーチ
 	private boolean menzen; // メンゼン
@@ -41,16 +42,17 @@ public class Player extends Mentsu implements Observer {
 
 	public void agari() {
 		System.out.println("あがり！！");
-		if (this.agari.get(2) == 1 && this.agari.get(3) == 1) {
-			System.out.println("役はタンヤオ、チートイツ！");
-			System.exit(0);
-		} else if (this.agari.get(2) == 1) {
-			System.out.println("役はタンヤオ！");
-		} else if (this.agari.get(3) == 1) {
-			System.out.println("役はチートイツ！");
-		} else {
-			System.exit(0);
+		List<Hands> hands = Judge.judgeHand(this.hand);
+		hands.removeIf(tile -> tile.getId() == 99);
+		if(hands.isEmpty()) {
+			System.out.println("役は...無し！");
+		}else {
+			System.out.println("役は..."+Judge.judgeHand(this.hand)+"！");
 		}
+		
+		System.exit(0);
+		
+		
 	}
 
 	public void sortHand(List<TileType> hand) {
@@ -75,9 +77,9 @@ public class Player extends Mentsu implements Observer {
 	 * @param table
 	 */
 	public void canCall(SubjectTable table) {
-		if (!table.getDiscard().containsKey(this)) {
-			Map<Mentsu, List<TileType>> callingTile = table.getDiscard();
-			List<Boolean> canCalls = Judge.canCall(this.hand, callingTile);
+		if (!table.getDiscard().containsKey((Integer)this.wind)) {
+			Map<Integer, List<TileType>> callingTile = table.getDiscard();
+			List<Boolean> canCalls = Judge.canCall(this.hand, callingTile, this.wind);
 			if (canCalls.get(0)) {
 				System.out.print(callingTile + "ポン？");
 			}
@@ -140,7 +142,7 @@ public class Player extends Mentsu implements Observer {
 		sortHand(this.hand);
 		this.hand.addAll(tsumo);
 		System.out.println(tsumo + "をツモってきたよ");
-		this.agari = Judge.judgeHand(this.hand);
+		this.agari = Judge.judgeDuringTheGame(this.hand);
 		System.out.println(this.hand);
 		if (this.agari.get(0) == 1) {
 			agari();
@@ -155,9 +157,9 @@ public class Player extends Mentsu implements Observer {
 	 * 
 	 * @return 打牌マップ
 	 */
-	public Map<Mentsu, List<TileType>> discard() {
-		Map<Mentsu, List<TileType>> discard = new HashMap<>();
-		discard.put(this, selectDiscard());
+	public Map<Integer, List<TileType>> discard() {
+		Map<Integer, List<TileType>> discard = new HashMap<>();
+		discard.put(this.wind, selectDiscard());
 		return discard;
 	}
 
@@ -192,13 +194,13 @@ public class Player extends Mentsu implements Observer {
 		System.out.println(this.hand.get(nanikiru) + "を切るよ\n");
 
 		// 牌山の先頭から指定枚数のリストをサブリストとして取得
-		List<TileType> discard = new ArrayList<>(this.hand.subList(nanikiru, nanikiru + 1));
+		List<TileType> discardList = new ArrayList<>(this.hand.subList(nanikiru, nanikiru + 1));
 
 		// 牌山から取り出した牌を削除
 		// 注意: subListのclear()は元のリストからも要素を削除します
 		this.hand.subList(nanikiru, nanikiru + 1).clear();
 
-		return discard;
+		return discardList;
 
 	}
 
@@ -228,9 +230,11 @@ public class Player extends Mentsu implements Observer {
 	}
 
 	@Override
+	/**ポンをするメソッドです。
+	 * 
+	 */
 	public void pon(List<TileType> discard) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'pon'");
+		this.hand.addAll(discard);
 	}
 
 	@Override

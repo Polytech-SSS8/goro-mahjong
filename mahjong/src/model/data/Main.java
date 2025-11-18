@@ -4,11 +4,11 @@ import java.util.Scanner;
 
 /**
  * mainメソッドを持つクラスです。
- * ここから麻雀ゲームを実行できます。y
+ * ここから麻雀ゲームを実行できます。
  */
 public class Main {
 	public static void main(String[] args) {
-		System.out.println("麻雀v0.2.2");
+		System.out.println("麻雀v0.2.6");
 		System.out.println("一雀頭四面子作れたらあがりだよ");
 		System.out.println("タンヤオとチートイツがわかるよ");
 		System.out.println("はじめる？");
@@ -24,6 +24,7 @@ public class Main {
 			player.tsumo(table.dealHand(table.getWall(), 1));
 			table.setDiscard(player.discard());
 			table.setDiscard(table.getDiscard());
+			
 		} while (true);
 	}
 

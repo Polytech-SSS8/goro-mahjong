@@ -23,8 +23,8 @@ public abstract class SubjectTable {
 		}
 	}
 
-	public abstract Map<Mentsu, List<TileType>> getDiscard();
-
+	public abstract Map<Integer, List<TileType>> getDiscard();
+	
 	public abstract List<TileType> getDiscardList();
 
 	public abstract TileType getDiscardTile();

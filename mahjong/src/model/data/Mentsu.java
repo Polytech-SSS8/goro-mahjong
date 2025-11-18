@@ -1,6 +1,5 @@
 package model.data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,8 +34,7 @@ public abstract class Mentsu implements Observer, Strategy {
      * @return 打牌
      */
     public List<TileType> selectDiscard() {
-        List<TileType> discard = new ArrayList<>();
-        return discard;
+        return selectDiscard();
     }
 
     /**

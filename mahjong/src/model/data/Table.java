@@ -10,16 +10,17 @@ public class Table extends SubjectTable {
 
     // フィールド
     private int round; // 局数
-    private int dealer; // 親の位置
+    
     private Map<Mentsu, Integer> points; // 点数管理
     private static final int initialPoints = 25000; // 初期点数
     private static final int totalPoints = 100000; // 総点数
-
-    private Map<Mentsu, Integer> directs; // 風（0,東 1,南 2,西 3,北）
+    
+    private int dealer; // 親の位置
+    private int fieldWind; // 場風（0,東 1,南 2,西 3,北）
     private int MentsuCount; // 面子の数
 
     private List<TileType> wall; // 牌山
-    private Map<Mentsu, List<TileType>> discard = new HashMap<>(); // 打牌
+    private Map<Integer, List<TileType>> discard = new HashMap<>(); // 打牌者の風をキー値とした打牌
 
     private TileType dora; // ドラ表示牌
     private int turn; // 巡目
@@ -35,6 +36,16 @@ public class Table extends SubjectTable {
     public Table() {
         super();
 
+    }
+    
+    public TileType call(int wind) {
+    	if(this.discard.isEmpty()) {
+    		return null;
+    	}
+    	TileType calling = getDiscardTile();
+    	this.discard.clear();
+    	System.out.println(wind + "家が副露！");
+    	return calling;
     }
 
     public void sortHand(List<TileType> hand) {
@@ -111,11 +122,11 @@ public class Table extends SubjectTable {
     }
 
     @Override
-    public Map<Mentsu, List<TileType>> getDiscard() {
-        return discard;
+    public Map<Integer, List<TileType>> getDiscard() {
+        return this.discard;
     }
 
-    public void setDiscard(Map<Mentsu, List<TileType>> discard) {
+    public void setDiscard(Map<Integer, List<TileType>> discard) {
         this.discard = discard;
     }
 
@@ -184,8 +195,8 @@ public class Table extends SubjectTable {
     }
 
     @Override
-    public List<TileType> getDiscardList() {
-        return this.discard.values().iterator().next();
+    public List<TileType> getDiscardList(){
+    	return this.discard.values().iterator().next();
     }
 
     @Override

@@ -5,7 +5,7 @@ package model.data;
  * 役のid、名前、翻数を格納します。
  */
 public enum Hands {
-    TANYAO(0, "タンヤオ", 1, 1), PINFU(1, "ピンフ", 1, 0);
+    TANYAO(0, "タンヤオ", 1, 1), PINFU(1, "ピンフ", 1, 0),CHITOI(2,"七対子",2,2), NONE(99,"",0,0);
 
     private final int id; // 手役id
     private final String name; // 手役の名前
@@ -23,5 +23,23 @@ public enum Hands {
     public String toString() {
         return this.name; // 表示したいフィールドを返す
     }
+
+	public int getId() {
+		return this.id;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public int getHan() {
+		return this.han;
+	}
+
+	public int getCalledHan() {
+		return this.calledHan;
+	}
+    
+    
 
 }

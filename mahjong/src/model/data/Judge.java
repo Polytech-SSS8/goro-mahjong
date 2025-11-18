@@ -5,37 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 手牌の役を判定するJudgeクラスです。
- * 判定情報を格納したArrayListを返すstaticなメソッドを持ちます。
+/**手役のいろいろな判定を返すクラスです。
+ * ごちゃごちゃしてます。
  */
 public class Judge {
-
-	private boolean isAgari;
-	private boolean isTempai;
-	private List<Hands> hands;
-	private List<TileType> hand;
-	private int han;
-	private int point;
-	// private int[] handCounts;
-
-	// コンストラクタ
-	public Judge() {
-		super();
-		this.isAgari = false;
-		this.isTempai = false;
-		this.hand = null;
-		this.han = 0;
-		this.point = 0;
-	}
-
-	private Judge(boolean isAgari, List<String> hands, List<TileType> hand, int han, int point) {
-		super();
-		this.isAgari = isAgari;
-		this.hand = hand;
-		this.han = han;
-		this.point = point;
-	}
+	private Judge() {}
 
 	// メソッド
 	/**
@@ -44,22 +18,25 @@ public class Judge {
 	 * @param 手牌のList
 	 * @return 判定結果List
 	 */
-	public static List<Integer> judgeHand(List<TileType> hand) {
+	public static List<Integer> judgeDuringTheGame(List<TileType> hand) {
 		int agariTileId = hand.getLast().getId();
 		int[] cnt = newHandCount(hand);
 		List<Integer> judge = new ArrayList<Integer>();
 		judge.add(judgeAgari(cnt));
-		if (judge.getFirst() == 1) {
-
-		}
 		judge.add(judgeTempai(cnt));
-		judge.add(tanyao(cnt));
-		judge.add(sevenPairs(cnt));
 
 		return judge;
 	}
+	
+	public static List<Hands> judgeHand(List<TileType> hand){
+		List<Hands> hands = new ArrayList<>();
+		int[] handCount = newHandCount(hand);
+		hands.add(tanyao(handCount));
+		hands.add(sevenPairs(handCount));
+		return hands;
+	}
 
-	public static List<Boolean> canCall(List<TileType> hand, Map<Mentsu, List<TileType>> discard) {
+	public static List<Boolean> canCall(List<TileType> hand, Map<Integer, List<TileType>> discard, int myWind) {
 		TileType discardTile = discard.values().iterator().next().get(0);
 		int discardId = discardTile.getId();
 		int[] handCount = newHandCount(hand);
@@ -69,6 +46,7 @@ public class Judge {
 		// 槓子
 		canCalls.add(canKan(handCount, discardId));
 		// 順子
+		//if ((myWind - discard. + 4) % 4 == 2 )
 		canCalls.add(canChii(handCount, discardId));
 		// ロン
 		canCalls.add(canRon(handCount, discardId));
@@ -210,14 +188,6 @@ public class Judge {
 		return false;
 	}
 
-	@Override
-	public String toString() {
-		String agari = this.isAgari == true ? "あがり！" : "notあがり";
-		return agari;
-
-		// toStringはとりあえずあがりの有無を返す感じで
-	}
-
 	/**
 	 * handCount配列の中で、1以上の値を持つ最初のインデックス（牌）を見つけます
 	 */
@@ -308,7 +278,7 @@ public class Judge {
 	 * @return 上がり形が成立していればtrue
 	 */
 	public static int judgeAgari(int[] handCount) {
-		if (sevenPairs(handCount) == 1) {
+		if (sevenPairs(handCount) == Hands.CHITOI) {
 			return 1;
 		}
 		for (int i = 0; i < handCount.length; i++) {
@@ -470,15 +440,15 @@ public class Judge {
 	 * @param 手牌カウント配列
 	 * @return 成立なら1、非成立なら0
 	 */
-	public static int tanyao(int[] handCount) {
+	public static Hands tanyao(int[] handCount) {
 		int[] cnt = handCount.clone();
 		if (cnt[0] == 0 && cnt[8] == 0 && cnt[9] == 0 && cnt[17] == 0 && cnt[18] == 0 &&
 				cnt[26] == 0 && cnt[27] == 0 && cnt[28] == 0 && cnt[29] == 0 && cnt[30] == 0 &&
 				cnt[31] == 0 && cnt[32] == 0 && cnt[33] == 0) {
-			return 1;
+			return Hands.TANYAO;
 		} else {
 			// TODO: removeIf()を使ってラムダ式で消す条件とか決めてできるらしーぞ
-			return 0;
+			return Hands.NONE;
 		}
 	}
 
@@ -488,16 +458,16 @@ public class Judge {
 	 * @param 手牌カウント配列
 	 * @return 成立なら1、非成立なら0
 	 */
-	public static int sevenPairs(int[] handCount) {
+	public static Hands sevenPairs(int[] handCount) {
 		int toitsu = 0;
 		for (int i = 0; i < handCount.length; i++) {
 			if (handCount[i] == 2) {
 				toitsu++;
 			}
 			if (toitsu == 7) {
-				return 1;
+				return Hands.CHITOI;
 			}
 		}
-		return 0;
+		return Hands.NONE;
 	}
 }

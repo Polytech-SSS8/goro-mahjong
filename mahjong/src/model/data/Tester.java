@@ -36,7 +36,7 @@ public class Tester {
 
 		// judgeHand(agari)で返ってきたリストをシスアウト
 		System.out.println("--↓[あがり、てんぱい、役]");
-		System.out.println(Judge.judgeHand(agari));
+		System.out.println(Judge.judgeDuringTheGame(agari));
 
 		System.out.println("--↓isRyammenテスト");
 		System.out.println(Judge.isRyammen(cntAgari, 18));
